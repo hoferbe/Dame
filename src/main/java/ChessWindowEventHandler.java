@@ -20,7 +20,7 @@ public class ChessWindowEventHandler implements EventHandler<WindowEvent> {
         System.out.println(event.getEventType().getName());
         if (event.getEventType().getName().compareTo("WINDOW_CLOSE_REQUEST") == 0){
             synchronized (events){
-                events.add("Close");
+                events.add("chessmenu_closeprogram");
                 events.notifyAll();
             }
         }

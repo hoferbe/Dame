@@ -1,4 +1,5 @@
 import javafx.application.Application;
+import javafx.event.ActionEvent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
@@ -9,7 +10,7 @@ import java.util.Queue;
 
 public class ChessMenu extends Application implements Runnable {
 
-    public final Queue<String> events;
+    private final Queue<String> events;
     public static Queue<String> eventTemp;
 
 
@@ -68,7 +69,12 @@ public class ChessMenu extends Application implements Runnable {
         //creating the Pane for the play button
         FlowPane playButtonPane = new FlowPane();
         Button playButton = new Button("Play");
-        playButton.setOnAction(new ChessActionEventHandler(events));
+        playButton.setOnAction(new ChessActionEventHandler(events){
+            @Override
+            public void handle(ActionEvent event) {
+                send("Chessmenu_StartGame");
+            }
+        });
 
         playButtonPane.getChildren().addAll(playButton);
 
