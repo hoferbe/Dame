@@ -8,9 +8,10 @@ import java.util.Queue;
 abstract class ChessActionEventHandler implements EventHandler<ActionEvent> {
 
     private final Queue<String> events;
+    public static Queue<String> eventTemp;
 
-    ChessActionEventHandler(Queue<String> eventsQueue){
-        events = eventsQueue;
+    ChessActionEventHandler(){
+        events = eventTemp;
     }
 
     protected void send(String eventMessage){

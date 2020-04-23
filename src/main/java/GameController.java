@@ -9,7 +9,8 @@ public class GameController {
     Thread GUIThread;
 
     GameController(String[] args) {
-        ChessMenu.eventTemp = eventInput;
+        ChessActionEventHandler.eventTemp = eventInput;
+        ChessWindowEventHandler.eventTemp = eventInput;
         running = true;
     }
 
@@ -29,8 +30,6 @@ public class GameController {
                     }
                 }
             } catch (InterruptedException ignored) {
-            }finally {
-                GUI.closeGUI();
             }
         }
     }
@@ -40,11 +39,14 @@ public class GameController {
         System.out.println("Event occured: " + eventName);
         switch (eventName) {
             case "chessmenu_startgame":
-                System.out.println("1");
                 GUI.setChangeWindow("Chessboard");
                 break;
+
+            case "chessboard_stopgame":
+                GUI.setChangeWindow("Menu");
+                break;
+
             case "chessmenu_closeprogram":
-                System.out.println("2");
                 closeProgram();
                 break;
         }

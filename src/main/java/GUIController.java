@@ -1,17 +1,15 @@
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.fxml.FXML;
-
-import java.awt.Menu;
-import java.util.Queue;
+import javafx.scene.Scene;
 
 public class GUIController implements Runnable {
 
-    static private boolean openWindow = true;
+    static private boolean openNewWindow = false;
     static private String newWindowName = "Menu";
     private final Object changeWindowLock = new Object();
-    Thread windowThread = new Thread();
+    Thread windowThread;
     private static volatile boolean running;
+    public static MyWindow myWindow;
 
 
     GUIController() {
@@ -20,19 +18,23 @@ public class GUIController implements Runnable {
 
     @Override
     public void run() {
+        windowThread = new Thread("WindowThread") {
+            @Override
+            public void run() {
+                Application.launch(MyWindow.class);
+            }
+        };
+        windowThread.start();
+
         while (!Thread.currentThread().isInterrupted() && running) {
             try {
                 synchronized (changeWindowLock) {
-                    if (!openWindow) {
+                    if (!openNewWindow) {
                         changeWindowLock.wait();
                     }
-                    if (openWindow) {
-                        if (windowThread.isAlive()) {
-                            Platform.exit();
-                            System.out.println(windowThread.isAlive());
-                        }
+                    if (openNewWindow) {
                         openNewWindow();
-                        openWindow = false;
+                        openNewWindow = false;
                     }
                 }
             } catch (InterruptedException ignored) {
@@ -48,18 +50,13 @@ public class GUIController implements Runnable {
         Platform.exit();
     }
 
-    private void openNewWindow() throws InterruptedException {
-        while(windowThread.isAlive()) Thread.sleep(100);
+    private void openNewWindow(){
         switch (newWindowName) {
             case "Menu":
-                windowThread = new Thread(new ChessMenu());
-                windowThread.setName("Menu Thread");
-                windowThread.start();
+                Platform.runLater(()->myWindow.changeScene("Menu"));
                 break;
             case "Chessboard":
-                windowThread = new Thread(new ChessWindow());
-                windowThread.setName("Chess Window Thread");
-                windowThread.start();
+                Platform.runLater(()->myWindow.changeScene("Chessboard"));
                 break;
         }
     }
@@ -67,7 +64,7 @@ public class GUIController implements Runnable {
     public void setChangeWindow(String newWindow) {
         synchronized (changeWindowLock) {
             newWindowName = newWindow;
-            openWindow = true;
+            openNewWindow = true;
             changeWindowLock.notifyAll();
         }
     }

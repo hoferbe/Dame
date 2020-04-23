@@ -8,10 +8,11 @@ import java.util.Queue;
 
 public class ChessWindowEventHandler implements EventHandler<WindowEvent> {
 
-    public final Queue<String> events;
+    private final Queue<String> events;
+    public static Queue<String> eventTemp;
 
-    ChessWindowEventHandler(Queue<String> eventsQueue){
-        events = eventsQueue;
+    ChessWindowEventHandler(){
+        events = eventTemp;
     }
 
     @Override

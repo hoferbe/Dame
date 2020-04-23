@@ -1,29 +1,15 @@
-import javafx.application.Application;
 import javafx.event.ActionEvent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
-import javafx.stage.Stage;
+import javafx.scene.layout.Pane;
 
 import java.util.Queue;
 
-public class ChessWindow extends Application implements Runnable {
+public class MenuPane extends BorderPane {
 
-    private final Queue<String> events;
-    public static Queue<String> eventTemp;
-
-
-    public ChessWindow() {
-        events = eventTemp;
-    }
-
-    @Override
-    public void start(Stage primaryStage) {
-
-        BorderPane root = new BorderPane();
-
-        root.setTop(new Label("Chess Test Window"));
+    public MenuPane(){
+        this.setTop(new Label("Chess"));
 
         //creating Pane to fill the center of the scene
         FlowPane centerPane = new FlowPane();
@@ -69,7 +55,7 @@ public class ChessWindow extends Application implements Runnable {
         //creating the Pane for the play button
         FlowPane playButtonPane = new FlowPane();
         Button playButton = new Button("Play");
-        playButton.setOnAction(new ChessActionEventHandler(events){
+        playButton.setOnAction(new ChessActionEventHandler(){
             @Override
             public void handle(ActionEvent event) {
                 send("Chessmenu_StartGame");
@@ -80,18 +66,9 @@ public class ChessWindow extends Application implements Runnable {
 
         //fill the center Pane
         centerPane.getChildren().addAll(chooseGameModePane, chooseDifficultyPane, chooseColorPane, playButtonPane);
-        root.setCenter(centerPane);
+        this.setCenter(centerPane);
 
-        root.setBottom(new Label("Testing!"));
+        this.setBottom(new Label("Testing!"));
 
-        primaryStage.setTitle("Chess");
-        primaryStage.setScene(new Scene(root, 300, 275));
-        primaryStage.setOnCloseRequest(new ChessWindowEventHandler(events));
-        primaryStage.show();
-    }
-
-    @Override
-    public void run() {
-        launch();
     }
 }
