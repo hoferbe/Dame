@@ -76,6 +76,6 @@ public class ChessboardPane extends BorderPane {
         centerPane.getChildren().addAll(chooseGameModePane, chooseDifficultyPane, chooseColorPane, playButtonPane, customButtonPane);
         this.setCenter(centerPane);
 
-        this.setBottom(new Label("Testing this shit!"));
+        this.setBottom(new Label("Testing this!"));
     }
 }
