@@ -6,24 +6,6 @@ import javafx.stage.WindowEvent;
 
 import java.util.Queue;
 
-public class ChessWindowEventHandler implements EventHandler<WindowEvent> {
+abstract class ChessWindowEventHandler extends ChessEventHandler<WindowEvent> {
 
-    private final Queue<String> events;
-    public static Queue<String> eventTemp;
-
-    ChessWindowEventHandler(){
-        events = eventTemp;
-    }
-
-    @Override
-    public void handle(WindowEvent event) {
-        System.out.println(event.toString());
-        System.out.println(event.getEventType().getName());
-        if (event.getEventType().getName().compareTo("WINDOW_CLOSE_REQUEST") == 0){
-            synchronized (events){
-                events.add("chessmenu_closeprogram");
-                events.notifyAll();
-            }
-        }
-    }
 }

@@ -9,8 +9,7 @@ public class GameController {
     Thread GUIThread;
 
     GameController(String[] args) {
-        ChessActionEventHandler.eventTemp = eventInput;
-        ChessWindowEventHandler.eventTemp = eventInput;
+        ChessEventHandler.eventTemp = eventInput;
         running = true;
     }
 
@@ -29,7 +28,8 @@ public class GameController {
                         handleEvent(eventInput.remove());
                     }
                 }
-            } catch (InterruptedException ignored) {
+            } catch (InterruptedException interruptEx) {
+                closeProgram();
             }
         }
     }
@@ -46,13 +46,15 @@ public class GameController {
                 GUI.setChangeWindow("Menu");
                 break;
 
-            case "chessmenu_closeprogram":
+            case "chesswindow_closeprogram":
                 closeProgram();
                 break;
         }
     }
 
     void closeProgram() {
+        GUI.closeGUI();
+
         running = false;
     }
 

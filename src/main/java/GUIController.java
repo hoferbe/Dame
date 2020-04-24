@@ -38,6 +38,7 @@ public class GUIController implements Runnable {
                     }
                 }
             } catch (InterruptedException ignored) {
+                closeGUI();
             }
         }
     }
@@ -45,9 +46,10 @@ public class GUIController implements Runnable {
     public void closeGUI() {
         synchronized (changeWindowLock) {
             running = false;
+            //to get the Thread out of sleep and actually check the running boolean
             changeWindowLock.notifyAll();
         }
-        Platform.exit();
+        myWindow.closeWindow();
     }
 
     private void openNewWindow(){
