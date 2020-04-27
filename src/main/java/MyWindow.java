@@ -13,11 +13,14 @@ public class MyWindow extends Application {
     Stage myStage;
 
     private Map<String, Scene> myScenes;
+    ChessboardPane chessPane;
+    String activeScene;
 
     public void fillMap(){
         myScenes = new HashMap<>();
         myScenes.put("Menu", new Scene(new MenuPane(), 300, 275));
-        myScenes.put("Chessboard", new Scene(new ChessboardPane(), 900, 900));
+        chessPane = new ChessboardPane();
+        myScenes.put("Chessboard", new Scene(new ChessboardPane()));
     }
 
     @Override
@@ -27,8 +30,10 @@ public class MyWindow extends Application {
         fillMap();
         myStage = primaryStage;
 
+        activeScene = "Menu";
         myStage.setTitle("Chess");
         myStage.setScene(myScenes.get("Menu"));
+
         myStage.setOnCloseRequest(new ChessWindowEventHandler(){
             @Override
             public void handle(WindowEvent event) {
@@ -45,8 +50,16 @@ public class MyWindow extends Application {
 
     public void changeScene(String sceneName){
         if(myScenes.containsKey(sceneName)){
+            activeScene = sceneName;
             myStage.setScene(myScenes.get(sceneName));
             myStage.show();
+        }
+    }
+
+    public void setHighlightSquares(String[] highlightSquares){
+        if(activeScene.compareTo("Chessboard") == 0) {
+            System.out.println(myScenes.get(activeScene).getRoot());
+            ((ChessboardPane)myScenes.get(activeScene).getRoot()).changeActive(highlightSquares);
         }
     }
 

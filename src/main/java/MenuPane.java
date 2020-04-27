@@ -56,7 +56,7 @@ public class MenuPane extends BorderPane {
         playButton.setOnAction(new ChessActionEventHandler(){
             @Override
             public void handle(ActionEvent event) {
-                send("Chessmenu_StartGame");
+                send("Chessmenuwindow_StartGame");
             }
         });
 

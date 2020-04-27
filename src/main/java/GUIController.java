@@ -70,4 +70,8 @@ public class GUIController implements Runnable {
             changeWindowLock.notifyAll();
         }
     }
+
+    public void setHighlightSquares(String[] highlightSquares){
+        Platform.runLater(()->myWindow.setHighlightSquares(highlightSquares));
+    }
 }
