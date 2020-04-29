@@ -13,6 +13,9 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.StrokeType;
 
 import java.awt.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 public class ChessboardPane extends AnchorPane {
 
@@ -21,7 +24,11 @@ public class ChessboardPane extends AnchorPane {
     double squareWidth;
     double squareHeight;
 
+    static final Map<String, String> imagePaths = new HashMap<>();
+    String[][] boardState = new String[8][8];
+
     AnchorPane squarePane;
+    AnchorPane piecesPane;
 
 
     ChessboardPane(){
@@ -50,7 +57,13 @@ public class ChessboardPane extends AnchorPane {
         AnchorPane.setLeftAnchor(squarePane, 0.0);
         AnchorPane.setTopAnchor(squarePane, 0.0);
 
-        this.getChildren().addAll(chessboardView, squarePane);
+        piecesPane = new AnchorPane();
+        AnchorPane.setLeftAnchor(piecesPane, 0.0);
+        AnchorPane.setTopAnchor(piecesPane, 0.0);
+
+
+
+        this.getChildren().addAll(chessboardView, squarePane, piecesPane);
     }
 
     public void changeActive(String[] activeSquares){
@@ -83,5 +96,29 @@ public class ChessboardPane extends AnchorPane {
 
     public void resetActive(){
         squarePane.getChildren().clear();
+    }
+
+
+    public void updateBoardPieces(String[][] newBoardState){
+        boardState = newBoardState;
+
+        resetBoardPieces();
+
+        for (int i = 0; i < 8; i++){
+            for (int j = 0; j < 8; j++){
+                if (boardState[i][j] != null){
+                    ImageView pieceView = new ImageView(new Image(imagePaths.get(boardState[i][j]), 100, 100, false, false));
+
+                    AnchorPane.setLeftAnchor(pieceView, i * squareWidth);
+                    AnchorPane.setTopAnchor(pieceView, j * squareHeight);
+
+                    piecesPane.getChildren().addAll(pieceView);
+                }
+            }
+        }
+    }
+
+    private void resetBoardPieces(){
+        piecesPane.getChildren().clear();
     }
 }

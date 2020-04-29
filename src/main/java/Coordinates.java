@@ -6,8 +6,9 @@ public class Coordinates {
         chessCoordinates = chessCoordinates.toLowerCase();
         char xChar = chessCoordinates.charAt(0);
         int xCoordinate = xChar - 'a';
-        System.out.println(xCoordinate);
 
-        return new Pair<>(xCoordinate, 0);
+        int yCoordinate = 8 - Character.getNumericValue(chessCoordinates.charAt(1));
+
+        return new Pair<>(xCoordinate, yCoordinate);
     }
 }

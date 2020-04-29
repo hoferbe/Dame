@@ -74,4 +74,8 @@ public class GUIController implements Runnable {
     public void setHighlightSquares(String[] highlightSquares){
         Platform.runLater(()->myWindow.setHighlightSquares(highlightSquares));
     }
+
+    public void setBoardState(String[][] boardState){
+        Platform.runLater(()->myWindow.setBoardState(boardState));
+    }
 }

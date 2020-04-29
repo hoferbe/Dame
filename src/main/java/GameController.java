@@ -1,3 +1,6 @@
+import javafx.util.Pair;
+
+import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 public class GameController {
@@ -27,17 +30,18 @@ public class GameController {
                         eventInput.wait();
                     }
                     while (!eventInput.isEmpty()) {
-                        //handle events until finisheed
+                        //handle events until finished
                         handleEvent(eventInput.remove());
                     }
                 }
-            } catch (InterruptedException interruptEx) {
+            } catch (NullPointerException | InterruptedException | InstantiationException | InvocationTargetException | NoSuchMethodException | IllegalAccessException | ClassNotFoundException e) {
+                e.printStackTrace();
                 closeProgram();
             }
         }
     }
 
-    void handleEvent(String eventName) {
+    void handleEvent(String eventName) throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException, ClassNotFoundException {
         eventName = eventName.toLowerCase();
         String[] eventParts = eventName.split("_"); //[0] origin, [1] event, [n>1] parameters
         System.out.println("Event occured: " + eventName);
@@ -46,6 +50,7 @@ public class GameController {
                 if(eventParts[1].compareTo("startgame") == 0) {
                     GUI.setChangeWindow("Chessboard");
                     myEngine = new GameEngine();
+                    GUI.setBoardState(myEngine.getStringBoard());
                 }
                 break;
 
@@ -63,7 +68,13 @@ public class GameController {
 
             case "chessboard":
                 if(eventParts[1].compareTo("clicked") == 0){
-                    myEngine.move(eventParts[2], eventParts[3]);
+
+
+
+                    String[] highlights = myEngine.squareClicked(new Pair<>(Integer.parseInt(eventParts[2]), Integer.parseInt(eventParts[3])));
+                    if(highlights != null && highlights.length != 0) {
+                        GUI.setHighlightSquares(highlights);
+                    }
                     /*
                     String[] test = new String[9];
                     test[0] = "green";

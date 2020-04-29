@@ -58,8 +58,13 @@ public class MyWindow extends Application {
 
     public void setHighlightSquares(String[] highlightSquares){
         if(activeScene.compareTo("Chessboard") == 0) {
-            System.out.println(myScenes.get(activeScene).getRoot());
             ((ChessboardPane)myScenes.get(activeScene).getRoot()).changeActive(highlightSquares);
+        }
+    }
+
+    public void setBoardState(String[][] boardState){
+        if(activeScene.compareTo("Chessboard") == 0) {
+            ((ChessboardPane)myScenes.get(activeScene).getRoot()).updateBoardPieces(boardState);
         }
     }
 
