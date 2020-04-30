@@ -10,6 +10,6 @@ public class TestPiece extends Piece {
 
     @Override
     public boolean isMoveLegal(Pair<Integer, Integer> start, Pair<Integer, Integer> end, Chessboard myChessboard) {
-        return start == square && Math.abs(start.getKey() - end.getKey()) <= 1 && Math.abs(start.getValue() - end.getValue()) <= 1;
+        return start == square && Math.abs(start.getKey() - end.getKey()) <= 1 && Math.abs(start.getValue() - end.getValue()) <= 1 && Math.abs(start.getKey() - end.getKey()) + Math.abs(start.getValue() - end.getValue()) != 0;
     }
 }

@@ -21,6 +21,10 @@ abstract class Piece {
         imagePathWhite = whitePath;
     }
 
+    public Pair<Integer, Integer> getSquare(){
+        return square;
+    }
+
     public Set<Pair<Integer, Integer>> getLegalMoves(Chessboard myChessboard){
         Set<Pair<Integer, Integer>> legalMoves = new HashSet<>();
         for(int i = 0; i < 8; i++){

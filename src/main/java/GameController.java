@@ -1,3 +1,4 @@
+import javafx.application.Application;
 import javafx.util.Pair;
 
 import java.lang.reflect.InvocationTargetException;
@@ -8,12 +9,17 @@ public class GameController {
     private final Object eventInputLock = new Object();
     private final Queue<String> eventInput = new LinkedList<>();
     private static volatile boolean running;
-    private GameEngine myEngine;
-    GUIController GUI;
-    Thread GUIThread;
+
+    public static GameEngine myEngine;
+    private Thread engineThread;
+
+
+    private GUIController GUI;
+    private Thread GUIThread;
 
     GameController(String[] args) {
         ChessEventHandler.eventTemp = eventInput;
+        GameEngine.eventTemp = eventInput;
         running = true;
     }
 
@@ -41,59 +47,61 @@ public class GameController {
         }
     }
 
-    void handleEvent(String eventName) throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException, ClassNotFoundException {
+    void handleEvent(String eventName){
         eventName = eventName.toLowerCase();
         String[] eventParts = eventName.split("_"); //[0] origin, [1] event, [n>1] parameters
         System.out.println("Event occured: " + eventName);
         switch (eventParts[0]) {
             case "chessmenuwindow":
-                if(eventParts[1].compareTo("startgame") == 0) {
+                if (eventParts[1].compareTo("startgame") == 0) {
+                    engineThread = new Thread("EngineThread") {
+                        @Override
+                        public void run() {
+                            try {
+                                myEngine = new GameEngine();
+                            } catch (InvocationTargetException | NoSuchMethodException | InstantiationException | IllegalAccessException | ClassNotFoundException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    };
+                    engineThread.start();
+
                     GUI.setChangeWindow("Chessboard");
-                    myEngine = new GameEngine();
+                    while(myEngine == null);
                     GUI.setBoardState(myEngine.getStringBoard());
                 }
                 break;
 
             case "chessboardwindow":
-                if(eventParts[1].compareTo("stopgame") == 0) {
+                if (eventParts[1].compareTo("stopgame") == 0) {
                     GUI.setChangeWindow("Menu");
                 }
                 break;
 
             case "chesswindow":
-                if(eventParts[1].compareTo("closeprogram") == 0) {
+                if (eventParts[1].compareTo("closeprogram") == 0) {
                     closeProgram();
                 }
                 break;
 
             case "chessboard":
-                if(eventParts[1].compareTo("clicked") == 0){
-
-
-
-                    String[] highlights = myEngine.squareClicked(new Pair<>(Integer.parseInt(eventParts[2]), Integer.parseInt(eventParts[3])));
-                    if(highlights != null && highlights.length != 0) {
-                        GUI.setHighlightSquares(highlights);
-                    }
-                    /*
-                    String[] test = new String[9];
-                    test[0] = "green";
-                    test[3] = "red";
-                    test[6] = "green";
-                    System.arraycopy(eventParts, 2, test, 1, 2);
-                    test[4] = Integer.toString((Integer.parseInt(test[1])+1)%8);
-                    test[5] = Integer.toString((Integer.parseInt(test[2])+1)%8);
-
-                    test[7] = Integer.toString((Integer.parseInt(test[1])+1)%8);
-                    test[8] = Integer.toString((Integer.parseInt(test[2]))%8);
-                    GUI.setHighlightSquares(test);
-                     */
+                if (eventParts[1].compareTo("clicked") == 0) {
+                    //String[] highlights = myEngine.squareClicked(new Pair<>(Integer.parseInt(eventParts[2]), Integer.parseInt(eventParts[3])));
+                    myEngine.createEvent(eventName);
                 }
+                break;
+
+            case "gameengine":
+                GUI.setHighlightSquares(Arrays.copyOfRange(eventParts, 1, eventParts.length));
+                GUI.setBoardState(myEngine.getStringBoard());
+                break;
         }
     }
 
     void closeProgram() {
         GUI.closeGUI();
+
+        myEngine.createEvent("controller_close");
 
         running = false;
     }

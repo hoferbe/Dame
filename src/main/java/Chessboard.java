@@ -16,6 +16,11 @@ public class Chessboard {
         chessboardState[coordinates.getKey()][coordinates.getValue()] = piece;
     }
 
+    public void movePiece(Pair<Integer, Integer> start, Pair<Integer, Integer> end){
+        chessboardState[end.getKey()][end.getValue()] = chessboardState[start.getKey()][start.getValue()];
+        chessboardState[start.getKey()][start.getValue()] = null;
+    }
+
     public Piece getPiece(Pair<Integer, Integer> coordinates) {
         return chessboardState[coordinates.getKey()][coordinates.getValue()];
     }
