@@ -1,3 +1,6 @@
+package Controller;
+
+import GUI.MyWindow;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Scene;
@@ -57,8 +60,8 @@ public class GUIController implements Runnable {
             case "Menu":
                 Platform.runLater(()->myWindow.changeScene("Menu"));
                 break;
-            case "Chessboard":
-                Platform.runLater(()->myWindow.changeScene("Chessboard"));
+            case "Engine.Chessboard":
+                Platform.runLater(()->myWindow.changeScene("Engine.Chessboard"));
                 break;
         }
     }

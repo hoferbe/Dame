@@ -1,3 +1,5 @@
+package Engine;
+
 import javafx.util.Pair;
 
 public class Coordinates {

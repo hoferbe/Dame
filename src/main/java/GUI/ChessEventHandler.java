@@ -1,10 +1,12 @@
+package GUI;
+
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.input.InputEvent;
 
 import java.util.Queue;
 
-abstract class ChessEventHandler<T extends Event> implements EventHandler<T> {
+public abstract class ChessEventHandler<T extends Event> implements EventHandler<T> {
 
     private final Queue<String> events;
     public static Queue<String> eventTemp;

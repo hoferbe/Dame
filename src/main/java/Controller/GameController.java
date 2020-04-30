@@ -1,5 +1,7 @@
-import javafx.application.Application;
-import javafx.util.Pair;
+package Controller;
+
+import Engine.GameEngine;
+import GUI.ChessEventHandler;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
@@ -66,7 +68,7 @@ public class GameController {
                     };
                     engineThread.start();
 
-                    GUI.setChangeWindow("Chessboard");
+                    GUI.setChangeWindow("Engine.Chessboard");
                     while(myEngine == null);
                     GUI.setBoardState(myEngine.getStringBoard());
                 }

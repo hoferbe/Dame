@@ -1,6 +1,13 @@
+package GUI;
+
+import Controller.GUIController;
+
+import Controller.GUIController;
+import GUI.ChessWindowEventHandler;
+import GUI.ChessboardPane;
+import GUI.MenuPane;
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.event.Event;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
@@ -20,7 +27,7 @@ public class MyWindow extends Application {
         myScenes = new HashMap<>();
         myScenes.put("Menu", new Scene(new MenuPane(), 300, 275));
         chessPane = new ChessboardPane();
-        myScenes.put("Chessboard", new Scene(new ChessboardPane()));
+        myScenes.put("Engine.Chessboard", new Scene(new ChessboardPane()));
     }
 
     @Override
@@ -57,13 +64,13 @@ public class MyWindow extends Application {
     }
 
     public void setHighlightSquares(String[] highlightSquares){
-        if(activeScene.compareTo("Chessboard") == 0) {
+        if(activeScene.compareTo("Engine.Chessboard") == 0) {
             ((ChessboardPane)myScenes.get(activeScene).getRoot()).changeActive(highlightSquares);
         }
     }
 
     public void setBoardState(String[][] boardState){
-        if(activeScene.compareTo("Chessboard") == 0) {
+        if(activeScene.compareTo("Engine.Chessboard") == 0) {
             ((ChessboardPane)myScenes.get(activeScene).getRoot()).updateBoardPieces(boardState);
         }
     }

@@ -1,8 +1,7 @@
-import javafx.util.Pair;
+package Engine;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.HashSet;
-import java.util.Set;
+import Engine.Piece;
+import javafx.util.Pair;
 
 public class Chessboard {
 

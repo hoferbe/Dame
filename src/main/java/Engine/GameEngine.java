@@ -1,3 +1,7 @@
+package Engine;
+
+import Controller.GameController;
+import GUI.ChessboardPane;
 import javafx.util.Pair;
 
 import java.lang.reflect.InvocationTargetException;
@@ -19,12 +23,12 @@ public class GameEngine {
 
     public GameEngine() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, ClassNotFoundException {
         Set<String> availablePiecesNames = new HashSet<>(Arrays.asList(
-                "TestPiece"
+                "Engine.TestPiece"
         ));
         myChessboard = new Chessboard();
         registerPieces(availablePiecesNames);
-        Piece test = new TestPiece(new Pair<>(5, 5), "white");
-        myChessboard.placePiece(new Pair<>(5, 5), test);
+
+        fillBoard();
 
         GameController.myEngine = this;
 
@@ -32,6 +36,11 @@ public class GameEngine {
 
         running = true;
         run();
+    }
+
+    private void fillBoard(){
+        Piece test = new TestPiece(new Pair<>(5, 5), "white");
+        myChessboard.placePiece(new Pair<>(5, 5), test);
     }
 
     private void registerPieces(Set<String> availablePiecesNames) throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {

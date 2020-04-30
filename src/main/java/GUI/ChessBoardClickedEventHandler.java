@@ -1,6 +1,7 @@
-import javafx.event.Event;
+package GUI;
+
+import GUI.ChessEventHandler;
 import javafx.scene.input.MouseEvent;
-import javafx.stage.WindowEvent;
 
 abstract class ChessBoardClickedEventHandler extends ChessEventHandler<MouseEvent> {
 

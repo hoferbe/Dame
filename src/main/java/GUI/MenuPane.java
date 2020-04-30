@@ -1,5 +1,7 @@
+package GUI;
+
+import GUI.ChessActionEventHandler;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;

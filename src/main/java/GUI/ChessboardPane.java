@@ -1,3 +1,5 @@
+package GUI;
+
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -24,7 +26,7 @@ public class ChessboardPane extends AnchorPane {
     double squareWidth;
     double squareHeight;
 
-    static final Map<String, String> imagePaths = new HashMap<>();
+    public static final Map<String, String> imagePaths = new HashMap<>();
     String[][] boardState = new String[8][8];
 
     AnchorPane squarePane;
