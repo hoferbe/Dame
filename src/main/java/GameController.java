@@ -40,7 +40,7 @@ public class GameController {
                         handleEvent(eventInput.remove());
                     }
                 }
-            } catch (NullPointerException | InterruptedException | InstantiationException | InvocationTargetException | NoSuchMethodException | IllegalAccessException | ClassNotFoundException e) {
+            } catch (NullPointerException | InterruptedException e) {
                 e.printStackTrace();
                 closeProgram();
             }
