@@ -1,6 +1,7 @@
-package Engine;
+package Engine.Pieces;
 
-import Engine.Piece;
+import Engine.Chessboard;
+import Engine.Pieces.Piece;
 import javafx.util.Pair;
 
 public class TestPiece extends Piece {

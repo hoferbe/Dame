@@ -1,6 +1,6 @@
 package Engine;
 
-import Engine.Piece;
+import Engine.Pieces.Piece;
 import javafx.util.Pair;
 
 public class Chessboard {

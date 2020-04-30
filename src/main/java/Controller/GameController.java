@@ -1,7 +1,7 @@
 package Controller;
 
 import Engine.GameEngine;
-import GUI.ChessEventHandler;
+import GUI.EventHandler.ChessEventHandler;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;

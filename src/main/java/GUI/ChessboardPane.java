@@ -1,23 +1,16 @@
 package GUI;
 
-import javafx.event.ActionEvent;
-import javafx.event.Event;
-import javafx.event.EventHandler;
-import javafx.scene.control.*;
+import GUI.EventHandler.ChessBoardClickedEventHandler;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.FlowPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.StrokeType;
 
-import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 public class ChessboardPane extends AnchorPane {
 

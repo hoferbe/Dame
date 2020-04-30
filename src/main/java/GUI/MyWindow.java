@@ -2,10 +2,7 @@ package GUI;
 
 import Controller.GUIController;
 
-import Controller.GUIController;
-import GUI.ChessWindowEventHandler;
-import GUI.ChessboardPane;
-import GUI.MenuPane;
+import GUI.EventHandler.ChessWindowEventHandler;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Scene;

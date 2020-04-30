@@ -1,6 +1,6 @@
 package GUI;
 
-import GUI.ChessActionEventHandler;
+import GUI.EventHandler.ChessActionEventHandler;
 import javafx.event.ActionEvent;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;

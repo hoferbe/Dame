@@ -1,11 +1,12 @@
-package Engine;
+package Engine.Pieces;
 
+import Engine.Chessboard;
 import javafx.util.Pair;
 
 import java.util.HashSet;
 import java.util.Set;
 
-abstract class Piece {
+public abstract class Piece {
 
     Pair<Integer, Integer> square;
 

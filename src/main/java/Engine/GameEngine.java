@@ -1,6 +1,8 @@
 package Engine;
 
 import Controller.GameController;
+import Engine.Pieces.Piece;
+import Engine.Pieces.TestPiece;
 import GUI.ChessboardPane;
 import javafx.util.Pair;
 
@@ -23,7 +25,7 @@ public class GameEngine {
 
     public GameEngine() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, ClassNotFoundException {
         Set<String> availablePiecesNames = new HashSet<>(Arrays.asList(
-                "Engine.TestPiece"
+                "Engine.Pieces.TestPiece"
         ));
         myChessboard = new Chessboard();
         registerPieces(availablePiecesNames);
