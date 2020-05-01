@@ -77,6 +77,7 @@ public class GameController {
             case "chessboardwindow":
                 if (eventParts[1].compareTo("stopgame") == 0) {
                     GUI.setChangeWindow("Menu");
+                    closeEngine();
                 }
                 break;
 
@@ -103,9 +104,15 @@ public class GameController {
     void closeProgram() {
         GUI.closeGUI();
 
-        myEngine.createEvent("controller_close");
+        closeEngine();
 
         running = false;
+    }
+
+    void closeEngine(){
+        if(myEngine != null) {
+            myEngine.createEvent("controller_close");
+        }
     }
 
 

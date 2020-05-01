@@ -1,8 +1,7 @@
 package Engine;
 
 import Controller.GameController;
-import Engine.Pieces.Piece;
-import Engine.Pieces.TestPiece;
+import Engine.Pieces.*;
 import GUI.ChessboardPane;
 import javafx.util.Pair;
 
@@ -21,34 +20,98 @@ public class GameEngine {
     private final Queue<String> controllerEvents;
     public static Queue<String> eventTemp;
 
-    private Piece activePiece = null;
+    private Pair<Integer, Integer> activeSquare = null;
+
+    private String currentPlayer;
 
     public GameEngine() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, ClassNotFoundException {
         Set<String> availablePiecesNames = new HashSet<>(Arrays.asList(
-                "Engine.Pieces.TestPiece"
+                "Engine.Pieces.TestPiece",
+                "Engine.Pieces.King",
+                "Engine.Pieces.Rook",
+                "Engine.Pieces.Bishop",
+                "Engine.Pieces.Knight",
+                "Engine.Pieces.Queen",
+                "Engine.Pieces.Pawn"
         ));
         myChessboard = new Chessboard();
         registerPieces(availablePiecesNames);
 
         fillBoard();
 
+        Piece.myEnginge = this;
+
         GameController.myEngine = this;
 
         controllerEvents = eventTemp;
+
+        currentPlayer = "white";
 
         running = true;
         run();
     }
 
     private void fillBoard(){
-        Piece test = new TestPiece(new Pair<>(5, 5), "white");
-        myChessboard.placePiece(new Pair<>(5, 5), test);
+
+        myChessboard.placePiece(new Pair<>(0, 0), new Rook("black"));
+        myChessboard.placePiece(new Pair<>(1, 0), new Knight("black"));
+        myChessboard.placePiece(new Pair<>(2, 0), new Bishop("black"));
+        myChessboard.placePiece(new Pair<>(3, 0), new Queen("black"));
+        myChessboard.placePiece(new Pair<>(4, 0), new King("black"));
+        myChessboard.placePiece(new Pair<>(5, 0), new Bishop("black"));
+        myChessboard.placePiece(new Pair<>(6, 0), new Knight("black"));
+        myChessboard.placePiece(new Pair<>(7, 0), new Rook("black"));
+
+        myChessboard.placePiece(new Pair<>(0, 1), new Pawn("black"));
+        myChessboard.placePiece(new Pair<>(1, 1), new Pawn("black"));
+        myChessboard.placePiece(new Pair<>(2, 1), new Pawn("black"));
+        myChessboard.placePiece(new Pair<>(3, 1), new Pawn("black"));
+        myChessboard.placePiece(new Pair<>(4, 1), new Pawn("black"));
+        myChessboard.placePiece(new Pair<>(5, 1), new Pawn("black"));
+        myChessboard.placePiece(new Pair<>(6, 1), new Pawn("black"));
+        myChessboard.placePiece(new Pair<>(7, 1), new Pawn("black"));
+
+
+        myChessboard.placePiece(new Pair<>(0, 7), new Rook("white"));
+        myChessboard.placePiece(new Pair<>(1, 7), new Knight("white"));
+        myChessboard.placePiece(new Pair<>(2, 7), new Bishop("white"));
+        myChessboard.placePiece(new Pair<>(3, 7), new Queen("white"));
+        myChessboard.placePiece(new Pair<>(4, 7), new King("white"));
+        myChessboard.placePiece(new Pair<>(5, 7), new Bishop("white"));
+        myChessboard.placePiece(new Pair<>(6, 7), new Knight("white"));
+        myChessboard.placePiece(new Pair<>(7, 7), new Rook("white"));
+
+        myChessboard.placePiece(new Pair<>(0, 6), new Pawn("white"));
+        myChessboard.placePiece(new Pair<>(1, 6), new Pawn("white"));
+        myChessboard.placePiece(new Pair<>(2, 6), new Pawn("white"));
+        myChessboard.placePiece(new Pair<>(3, 6), new Pawn("white"));
+        myChessboard.placePiece(new Pair<>(4, 6), new Pawn("white"));
+        myChessboard.placePiece(new Pair<>(5, 6), new Pawn("white"));
+        myChessboard.placePiece(new Pair<>(6, 6), new Pawn("white"));
+        myChessboard.placePiece(new Pair<>(7, 6), new Pawn("white"));
+
+    }
+
+    public boolean checkCheck(String color, Chessboard testBoard){
+        Pair<Integer, Integer> currentKingsquare;
+        if(color.compareTo("white") == 0) currentKingsquare = testBoard.getKingSquare("white");
+        else currentKingsquare = testBoard.getKingSquare("black");
+
+        for (int i = 0; i < 8; i++){
+            for (int j = 0; j < 8; j++){
+                Piece currentPiece = testBoard.getPiece(new Pair<>(i, j));
+                if(currentPiece != null && currentPiece.getPieceColor().compareTo(color) != 0 && currentPiece.isMoveable(new Pair<>(i, j), currentKingsquare, testBoard)){
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     private void registerPieces(Set<String> availablePiecesNames) throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
         for (String name : availablePiecesNames) {
             Class<? extends Piece> pieceClass = (Class<? extends Piece>) Class.forName(name);
-            Piece placeHolder = pieceClass.getDeclaredConstructor(new Class[]{Pair.class, String.class}).newInstance(new Pair<>(0, 0), "white");
+            Piece placeHolder = pieceClass.getDeclaredConstructor(new Class[]{String.class}).newInstance("white");
             ChessboardPane.imagePaths.put(name + "_white", placeHolder.imagePathWhite);
             ChessboardPane.imagePaths.put(name + "_black", placeHolder.imagePathBlack);
         }
@@ -93,11 +156,12 @@ public class GameEngine {
 
     public void squareClicked(Pair<Integer, Integer> square) {
         String activeSquareEvent = "GameEngine_";
-        if(activePiece == null) {
+        if(activeSquare == null) {
             Set<Pair<Integer, Integer>> highlights;
-            activePiece = myChessboard.getPiece(square);
-            if (activePiece != null) {
-                highlights = activePiece.getLegalMoves(myChessboard);
+            Piece clickedPiece = myChessboard.getPiece(square);
+            if (clickedPiece != null && clickedPiece.getPieceColor().compareTo(currentPlayer) == 0) {
+                activeSquare = square;
+                highlights = myChessboard.getPiece(activeSquare).getLegalMoves(square, myChessboard);
                 ArrayList<String> highlights2 = new ArrayList<>();
                 highlights2.add("red");
                 highlights2.add(square.getKey().toString());
@@ -111,11 +175,11 @@ public class GameEngine {
             }
         }
         else{
-            if(activePiece.isMoveLegal(activePiece.getSquare(), square, myChessboard)){
-                myChessboard.movePiece(activePiece.getSquare(), square);
-                activePiece.updateSquare(square);
+            if(myChessboard.getPiece(activeSquare).isMoveLegal(activeSquare, square, myChessboard)){
+                myChessboard.movePiece(activeSquare, square);
+                changeColor();
             }
-            activePiece = null;
+            activeSquare = null;
         }
 
         synchronized (controllerEvents) {
@@ -135,4 +199,8 @@ public class GameEngine {
         }
     }
 
+    public void changeColor(){
+        if(currentPlayer.compareTo("white") == 0) currentPlayer = "black";
+        else currentPlayer = "white";
+    }
 }

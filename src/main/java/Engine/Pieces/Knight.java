@@ -1,15 +1,14 @@
 package Engine.Pieces;
 
 import Engine.Chessboard;
-import Engine.Pieces.Piece;
 import javafx.util.Pair;
 
-public class TestPiece extends Piece {
+public class Knight extends Piece{
 
-
-    public TestPiece(String color) {
-        super(color, "file:src/main/resources/circle.png", "file:src/main/resources/circle.png");
+    public Knight(String color) {
+        super(color, "file:src/main/resources/Chess_nlt60.png", "file:src/main/resources/Chess_ndt60.png");
     }
+
 
     @Override
     public boolean isMoveLegal(Pair<Integer, Integer> start, Pair<Integer, Integer> end, Chessboard myChessboard) {
@@ -18,9 +17,11 @@ public class TestPiece extends Piece {
 
     @Override
     public boolean isMoveable(Pair<Integer, Integer> start, Pair<Integer, Integer> end, Chessboard myChessboard) {
+        if(Math.abs(start.getKey() - end.getKey()) * Math.abs(start.getValue() - end.getValue()) != 2) return false;
+
+        //Checking that the target square is either empty or enemy piece
         if(myChessboard.getPiece(end) != null && sameColor(myChessboard.getPiece(end))) return false;
-        return Math.abs(start.getKey() - end.getKey()) <= 1
-                && Math.abs(start.getValue() - end.getValue()) <= 1
-                && Math.abs(start.getKey() - end.getKey()) + Math.abs(start.getValue() - end.getValue()) != 0;
+
+        return true;
     }
 }

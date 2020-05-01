@@ -1,14 +1,12 @@
 package Engine.Pieces;
 
 import Engine.Chessboard;
-import Engine.Pieces.Piece;
 import javafx.util.Pair;
 
-public class TestPiece extends Piece {
+public class King extends Piece{
 
-
-    public TestPiece(String color) {
-        super(color, "file:src/main/resources/circle.png", "file:src/main/resources/circle.png");
+    public King(String color) {
+        super(color, "file:src/main/resources/Chess_klt60.png", "file:src/main/resources/Chess_kdt60.png");
     }
 
     @Override

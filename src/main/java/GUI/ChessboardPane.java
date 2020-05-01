@@ -72,9 +72,9 @@ public class ChessboardPane extends AnchorPane {
                 Rectangle rect = new Rectangle(squareWidth, squareHeight);
                 rect.setFill(Color.rgb(0, 0, 0, 0));
                 if (color.compareTo("green") == 0) {
-                    rect.setStroke(Color.rgb(0, 255, 0, 0.5));
+                    rect.setStroke(Color.rgb(0, 255, 0, 0.8));
                 } else if (color.compareTo("red") == 0) {
-                    rect.setStroke(Color.rgb(255, 0, 0, 0.5));
+                    rect.setStroke(Color.rgb(255, 0, 0, 0.8));
                 } else {
                     rect.setStroke(Color.rgb(100, 100, 100, 0.5));
                 }
