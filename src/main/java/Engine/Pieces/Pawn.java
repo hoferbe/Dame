@@ -16,6 +16,7 @@ public class Pawn extends Piece {
 
     @Override
     public boolean isMoveable(Pair<Integer, Integer> start, Pair<Integer, Integer> end, Chessboard myChessboard) {
+        tempSpecialMove = "none";
         int startX = start.getKey();
         int startY = start.getValue();
 
@@ -37,6 +38,7 @@ public class Pawn extends Piece {
             if (myChessboard.getPiece(end) != null) return false;
             //turn on that it can be taken en passen, if it is a double move
             if (Math.abs(startY - endY) == 2) this.canBeEnPassantTaken = true;
+            if(pieceColor.equals("white") && endY == 0 || pieceColor.equals("black") && endY == 7) tempSpecialMove = "promotion";
             return true;
         }
         //Check if diagonal move is only one square to the side
