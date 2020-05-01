@@ -248,7 +248,7 @@ public class GameEngine {
 
     private void stopGame(){
         synchronized (controllerEvents){
-            controllerEvents.add("engine_closeChessboard");
+            controllerEvents.add("gameengine_closeChessboard");
             controllerEvents.notifyAll();
         }
     }

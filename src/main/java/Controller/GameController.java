@@ -100,8 +100,8 @@ public class GameController {
                     GUI.setBoardState(myEngine.getStringBoard());
                 }
                 else if(eventParts[1].equals("closechessboard")){
-                    myEngine.createEvent("controller_close");
-
+                    GUI.setChangeWindow("Menu");
+                    closeEngine();
                 }
                 break;
         }
