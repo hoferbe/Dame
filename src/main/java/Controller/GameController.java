@@ -85,6 +85,10 @@ public class GameController {
                 if (eventParts[1].compareTo("closeprogram") == 0) {
                     closeProgram();
                 }
+                else if(eventParts[1].equals("openmenu")){
+                    GUI.setChangeWindow("Menu");
+                    closeEngine();
+                }
                 break;
 
             case "chessboard":

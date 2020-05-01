@@ -1,10 +1,16 @@
 package GUI;
 
+import GUI.EventHandler.ChessActionEventHandler;
 import GUI.EventHandler.ChessBoardClickedEventHandler;
+import javafx.event.ActionEvent;
+import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.StrokeType;
@@ -12,7 +18,7 @@ import javafx.scene.shape.StrokeType;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ChessboardPane extends AnchorPane {
+public class ChessboardPane extends BorderPane {
 
     double chessboardWidth;
     double chessboardHeight;
@@ -27,6 +33,7 @@ public class ChessboardPane extends AnchorPane {
 
 
     ChessboardPane() {
+        AnchorPane bordPane = new AnchorPane();
         Image chessboardImage = new Image("file:src/main/resources/chessboard.png", 800, 800, false, false);
         ImageView chessboardView = new ImageView(chessboardImage);
         chessboardWidth = chessboardImage.getWidth();
@@ -56,8 +63,22 @@ public class ChessboardPane extends AnchorPane {
         AnchorPane.setLeftAnchor(piecesPane, 0.0);
         AnchorPane.setTopAnchor(piecesPane, 0.0);
 
+        bordPane.getChildren().addAll(chessboardView, squarePane, piecesPane);
 
-        this.getChildren().addAll(chessboardView, squarePane, piecesPane);
+        VBox buttonPane = new VBox();
+
+        Button backButton = new Button("Go back");
+        backButton.setOnAction(new ChessActionEventHandler() {
+            @Override
+            public void handle(ActionEvent event) {
+                send("chesswindow_openMenu");
+            }
+        });
+        buttonPane.getChildren().addAll(backButton);
+
+        this.setCenter(bordPane);
+        this.setRight(buttonPane);
+
     }
 
     public void changeActive(String[] activeSquares) {

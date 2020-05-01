@@ -52,6 +52,62 @@ public class GameEngine {
         run();
     }
 
+    public GameEngine(String[] pieces) throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, ClassNotFoundException {
+        Set<String> availablePiecesNames = new HashSet<>(Arrays.asList(
+                "Engine.Pieces.TestPiece",
+                "Engine.Pieces.King",
+                "Engine.Pieces.Rook",
+                "Engine.Pieces.Bishop",
+                "Engine.Pieces.Knight",
+                "Engine.Pieces.Queen",
+                "Engine.Pieces.Pawn"
+        ));
+        myChessboard = new Chessboard();
+        registerPieces(availablePiecesNames);
+
+        for (String piece : pieces){
+            String[] parts = piece.split("_");
+            switch(parts[0]){
+                case "Bishop":
+                    myChessboard.placePiece(new Pair<>(Integer.parseInt(parts[1]), Integer.parseInt(parts[2])), new Bishop(parts[3]));
+                    break;
+
+                case "Rook":
+                    myChessboard.placePiece(new Pair<>(Integer.parseInt(parts[1]), Integer.parseInt(parts[2])), new Rook(parts[3]));
+                    break;
+
+                case "Knight":
+                    myChessboard.placePiece(new Pair<>(Integer.parseInt(parts[1]), Integer.parseInt(parts[2])), new Knight(parts[3]));
+                    break;
+
+                case "Pawn":
+                    myChessboard.placePiece(new Pair<>(Integer.parseInt(parts[1]), Integer.parseInt(parts[2])), new Pawn(parts[3]));
+                    break;
+
+                case "King":
+                    myChessboard.placePiece(new Pair<>(Integer.parseInt(parts[1]), Integer.parseInt(parts[2])), new Bishop(parts[3]));
+                    break;
+
+                case "Queen":
+                    myChessboard.placePiece(new Pair<>(Integer.parseInt(parts[1]), Integer.parseInt(parts[2])), new Bishop(parts[3]));
+                    break;
+
+            }
+        }
+
+        Piece.myEnginge = this;
+
+        GameController.myEngine = this;
+
+        controllerEvents = eventTemp;
+
+        currentPlayer = "white";
+
+        running = true;
+        ready = true;
+        run();
+    }
+
     private void fillBoard() {
 
         myChessboard.placePiece(new Pair<>(0, 0), new Rook("black"));
