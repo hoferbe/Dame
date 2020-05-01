@@ -95,8 +95,14 @@ public class GameController {
                 break;
 
             case "gameengine":
-                GUI.setHighlightSquares(Arrays.copyOfRange(eventParts, 1, eventParts.length));
-                GUI.setBoardState(myEngine.getStringBoard());
+                if(eventParts[1].equals("highlights")) {
+                    GUI.setHighlightSquares(Arrays.copyOfRange(eventParts, 2, eventParts.length));
+                    GUI.setBoardState(myEngine.getStringBoard());
+                }
+                else if(eventParts[1].equals("closechessboard")){
+                    myEngine.createEvent("controller_close");
+
+                }
                 break;
         }
     }

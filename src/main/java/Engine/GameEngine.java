@@ -51,7 +51,7 @@ public class GameEngine {
         run();
     }
 
-    private void fillBoard(){
+    private void fillBoard() {
 
         myChessboard.placePiece(new Pair<>(0, 0), new Rook("black"));
         myChessboard.placePiece(new Pair<>(1, 0), new Knight("black"));
@@ -92,15 +92,15 @@ public class GameEngine {
 
     }
 
-    public boolean checkCheck(String color, Chessboard testBoard){
+    public boolean checkCheck(String color, Chessboard testBoard) {
         Pair<Integer, Integer> currentKingsquare;
-        if(color.compareTo("white") == 0) currentKingsquare = testBoard.getKingSquare("white");
+        if (color.compareTo("white") == 0) currentKingsquare = testBoard.getKingSquare("white");
         else currentKingsquare = testBoard.getKingSquare("black");
 
-        for (int i = 0; i < 8; i++){
-            for (int j = 0; j < 8; j++){
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
                 Piece currentPiece = testBoard.getPiece(new Pair<>(i, j));
-                if(currentPiece != null && currentPiece.getPieceColor().compareTo(color) != 0 && currentPiece.isMoveable(new Pair<>(i, j), currentKingsquare, testBoard)){
+                if (currentPiece != null && currentPiece.getPieceColor().compareTo(color) != 0 && currentPiece.isMoveable(new Pair<>(i, j), currentKingsquare, testBoard)) {
                     return true;
                 }
             }
@@ -118,8 +118,8 @@ public class GameEngine {
     }
 
     public void run() {
-        try{
-            while(!Thread.currentThread().isInterrupted() && running){
+        try {
+            while (!Thread.currentThread().isInterrupted() && running) {
                 synchronized (engineEvents) {
                     if (engineEvents.isEmpty()) {
                         //is there's no Event, wait
@@ -131,32 +131,33 @@ public class GameEngine {
                     }
                 }
             }
-        }catch(InterruptedException ignore){
+        } catch (InterruptedException ignore) {
 
         }
     }
 
-    private void handleEvent(String eventName){
+    private void handleEvent(String eventName) {
         eventName = eventName.toLowerCase();
         String[] eventParts = eventName.split("_"); //[0] origin, [1] event, [n>1] parameters
         System.out.println("Event occured: " + eventName);
         switch (eventParts[0]) {
             case "chessboard":
-                if(eventParts[1].compareTo("clicked") == 0){
+                if (eventParts[1].compareTo("clicked") == 0) {
                     squareClicked(new Pair<>(Integer.parseInt(eventParts[2]), Integer.parseInt(eventParts[3])));
                 }
                 break;
 
             case "controller":
-                if(eventParts[1].compareTo("close") == 0){
+                if (eventParts[1].compareTo("close") == 0) {
                     running = false;
                 }
+
         }
     }
 
     public void squareClicked(Pair<Integer, Integer> square) {
-        String activeSquareEvent = "GameEngine_";
-        if(activeSquare == null) {
+        String activeSquareEvent = "GameEngine_highlights_";
+        if (activeSquare == null) {
             Set<Pair<Integer, Integer>> highlights;
             Piece clickedPiece = myChessboard.getPiece(square);
             if (clickedPiece != null && clickedPiece.getPieceColor().compareTo(currentPlayer) == 0) {
@@ -173,11 +174,33 @@ public class GameEngine {
                 }
                 activeSquareEvent += String.join("_", highlights2);
             }
-        }
-        else{
-            if(myChessboard.getPiece(activeSquare).isMoveLegal(activeSquare, square, myChessboard)){
+        } else {
+            if (myChessboard.getPiece(activeSquare).isMoveLegal(activeSquare, square, myChessboard)) {
+                myChessboard.getPiece(activeSquare).writeSpecialMove();
+                myChessboard.getPiece(activeSquare).canCastleFalse();
+                String[] specialMove = myChessboard.getPiece(activeSquare).getSpecialMove().split("_");
                 myChessboard.movePiece(activeSquare, square);
+                switch (specialMove[0]) {
+                    case "castle":
+                        myChessboard.getPiece(new Pair<>(Integer.parseInt(specialMove[1]), activeSquare.getValue())).canCastleFalse();
+                        myChessboard.movePiece(new Pair<>(Integer.parseInt(specialMove[1]), activeSquare.getValue()), new Pair<>(Integer.parseInt(specialMove[2]), activeSquare.getValue()));
+                        break;
+
+                    case "enpassant":
+                        myChessboard.removePiece(new Pair<>(Integer.parseInt(specialMove[1]), Integer.parseInt(specialMove[2])));
+                        break;
+
+                    case "promotion":
+                        myChessboard.placePiece(square, new Queen(myChessboard.getPiece(square).getPieceColor()));
+                        break;
+                }
                 changeColor();
+                resetEnPassant();
+                if(checkCheck(currentPlayer, myChessboard)){
+                    if(!legalMovesLeft(currentPlayer)){
+                        stopGame();
+                    }
+                }
             }
             activeSquare = null;
         }
@@ -188,19 +211,45 @@ public class GameEngine {
         }
     }
 
+    private boolean legalMovesLeft(String color){
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                Piece currentPiece = myChessboard.getPiece(new Pair<>(i, j));
+                if(currentPiece != null && currentPiece.getPieceColor().equals(color) && currentPiece.getLegalMoves(new Pair<>(i, j), myChessboard).size() > 0) return true;
+            }
+        }
+        return false;
+    }
+
     public String[][] getStringBoard() {
         return myChessboard.getStringBoard();
     }
 
-    public void createEvent(String event){
-        synchronized (engineEvents){
+    public void createEvent(String event) {
+        synchronized (engineEvents) {
             engineEvents.add(event);
             engineEvents.notifyAll();
         }
     }
 
-    public void changeColor(){
-        if(currentPlayer.compareTo("white") == 0) currentPlayer = "black";
+    public void changeColor() {
+        if (currentPlayer.compareTo("white") == 0) currentPlayer = "black";
         else currentPlayer = "white";
+    }
+
+    public void resetEnPassant(){
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                Piece currentPiece = myChessboard.getPiece(new Pair<>(i, j));
+                if(currentPiece != null && currentPiece.getPieceColor().equals(currentPlayer)) currentPiece.resetEnPassent();
+            }
+        }
+    }
+
+    private void stopGame(){
+        synchronized (controllerEvents){
+            controllerEvents.add("engine_closeChessboard");
+            controllerEvents.notifyAll();
+        }
     }
 }

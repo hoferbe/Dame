@@ -44,6 +44,7 @@ public class Chessboard {
 
     public void movePiece(Pair<Integer, Integer> start, Pair<Integer, Integer> end){
         if(getPiece(start).getPieceIdentifierName().split("_")[0].compareTo("Engine.Pieces.King")==0){
+            getPiece(start);
             if (getPiece(start).getPieceIdentifierName().split("_")[1].compareTo("white") == 0) {
             whiteKingSquare = end;
             }
@@ -53,6 +54,10 @@ public class Chessboard {
         }
         chessboardState[end.getKey()][end.getValue()] = chessboardState[start.getKey()][start.getValue()];
         chessboardState[start.getKey()][start.getValue()] = null;
+    }
+
+    public void removePiece(Pair<Integer, Integer> coordinates){
+        chessboardState[coordinates.getKey()][coordinates.getValue()] = null;
     }
 
     public Pair<Integer, Integer> getKingSquare(String color){

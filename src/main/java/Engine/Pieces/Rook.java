@@ -4,8 +4,10 @@ import Engine.Chessboard;
 import javafx.util.Pair;
 
 public class Rook extends Piece{
+
     public Rook(String color) {
         super(color, "file:src/main/resources/Chess_rlt60.png", "file:src/main/resources/Chess_rdt60.png");
+        canCastle = true;
     }
 
     @Override

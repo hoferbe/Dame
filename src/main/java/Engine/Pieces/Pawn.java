@@ -16,26 +16,45 @@ public class Pawn extends Piece {
 
     @Override
     public boolean isMoveable(Pair<Integer, Integer> start, Pair<Integer, Integer> end, Chessboard myChessboard) {
-        if (start.getKey().equals(end.getKey())) {
+        int startX = start.getKey();
+        int startY = start.getValue();
+
+        int endX = end.getKey();
+        int endY = end.getValue();
+
+        //Check for a straight move, can't take then
+        if (startX == endX) {
             if (this.pieceColor.equals("white")) {
-                if ((start.getValue() != 6 || start.getValue() != end.getValue() + 2) && start.getValue() != end.getValue() + 1)
+                //Check if it's only one square move or 2 in case of starting line
+                if ((startY != 6 || startY != endY + 2) && startY != endY + 1)
                     return false;
             } else {
-                if ((start.getValue() != 1 || start.getValue() != end.getValue() - 2) && start.getValue() != end.getValue() - 1)
+                //Check if it's only one square move or 2 in case of starting line
+                if ((startY != 1 || startY != endY - 2) && startY != endY - 1)
                     return false;
             }
+            //Can't take a piece moving that way
             if (myChessboard.getPiece(end) != null) return false;
+            //turn on that it can be taken en passen, if it is a double move
+            if (Math.abs(startY - endY) == 2) this.canBeEnPassantTaken = true;
             return true;
         }
-        else if(Math.abs(start.getKey() - end.getKey()) == 1){
+        //Check if diagonal move is only one square to the side
+        else if(Math.abs(startX - endX) == 1){
+            //Check if diagonal move is only one square forward
             if (this.pieceColor.equals("white")) {
-                if (start.getValue() != end.getValue() + 1)
+                if (startY != endY + 1)
                     return false;
             } else {
-                if (start.getValue() != end.getValue() - 1)
+                //Check if diagonal move is only one square forward
+                if (startY != endY - 1)
                     return false;
             }
-            if (myChessboard.getPiece(end) == null || myChessboard.getPiece(end).getPieceColor().equals(this.pieceColor)) return false;
+
+            if ((myChessboard.getPiece(end) == null || myChessboard.getPiece(end).getPieceColor().equals(this.pieceColor))
+                    && (myChessboard.getPiece(new Pair<>(endX, startY)) == null || myChessboard.getPiece(new Pair<>(endX, startY)).getPieceColor().equals(this.pieceColor) || !myChessboard.getPiece(new Pair<>(endX, startY)).canBeEnPassantTaken)) return false;
+            if(myChessboard.getPiece(end) == null) tempSpecialMove = "enpassant_" + endX + "_" + startY;
+            else if(pieceColor.equals("white") && endY == 0 || pieceColor.equals("black") && endY == 7) tempSpecialMove = "promotion";
             return true;
         }
         return false;
