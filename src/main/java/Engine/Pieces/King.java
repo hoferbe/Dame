@@ -56,7 +56,7 @@ public class King extends Piece {
         } else {
             //Castling to right
             //Check if rook is still castable
-            if (!myChessboard.getPiece(new Pair<>(7, startY)).isCanCastle()) return false;
+            if (myChessboard.getPiece(new Pair<>(7, startY)) == null || !myChessboard.getPiece(new Pair<>(7, startY)).isCanCastle()) return false;
 
             //Check that there is no piece in between
             if (

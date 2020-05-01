@@ -22,7 +22,7 @@ public class GameEngine {
 
     private String currentPlayer;
 
-    public boolean ready = false;
+    public boolean ready;
 
     public GameEngine() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, ClassNotFoundException {
         Set<String> availablePiecesNames = new HashSet<>(Arrays.asList(
@@ -198,6 +198,11 @@ public class GameEngine {
                 changeColor();
                 resetEnPassant();
                 if(checkCheck(currentPlayer, myChessboard)){
+                    if(!legalMovesLeft(currentPlayer)){
+                        stopGame();
+                    }
+                }
+                else{
                     if(!legalMovesLeft(currentPlayer)){
                         stopGame();
                     }
