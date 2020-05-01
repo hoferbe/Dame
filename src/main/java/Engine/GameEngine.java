@@ -10,9 +10,7 @@ import java.util.*;
 
 public class GameEngine {
 
-    Chessboard myChessboard;
-
-    private Set<Class<? extends Piece>> availablePieces;
+    private final Chessboard myChessboard;
 
     public final Queue<String> engineEvents = new LinkedList<>();
     private static volatile boolean running;
@@ -23,6 +21,8 @@ public class GameEngine {
     private Pair<Integer, Integer> activeSquare = null;
 
     private String currentPlayer;
+
+    public boolean ready = false;
 
     public GameEngine() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, ClassNotFoundException {
         Set<String> availablePiecesNames = new HashSet<>(Arrays.asList(
@@ -48,6 +48,7 @@ public class GameEngine {
         currentPlayer = "white";
 
         running = true;
+        ready = true;
         run();
     }
 

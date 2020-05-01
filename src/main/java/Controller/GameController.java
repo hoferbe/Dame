@@ -69,7 +69,7 @@ public class GameController {
                     engineThread.start();
 
                     GUI.setChangeWindow("Engine.Chessboard");
-                    while(myEngine == null);
+                    while(myEngine == null || !myEngine.ready);
                     GUI.setBoardState(myEngine.getStringBoard());
                 }
                 break;
