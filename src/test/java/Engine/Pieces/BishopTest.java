@@ -3,6 +3,7 @@ package Engine.Pieces;
 import Engine.GameEngine;
 import javafx.util.Pair;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -47,7 +48,7 @@ public class BishopTest {
         myEngine.squareClicked(new Pair<>(0, 0));
         events.clear();
         myEngine.squareClicked(new Pair<>(7, 7));
-        assert (Objects.equals(events.peek(), "gameengine_highlights_"));
+        Assert.assertTrue(Objects.equals(events.peek(), "gameengine_highlights_"));
     }
 
 
