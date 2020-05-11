@@ -2,6 +2,8 @@ package DameEngine;
 
 import DameEngine.Pieces.Piece;
 
+import java.util.Arrays;
+
 public class Board {
     private final Piece[][] BoardState;
 
@@ -20,5 +22,12 @@ public class Board {
 
     public Piece getPiece(Coordinates coordinates){
         return BoardState[coordinates.getX()][coordinates.getY()];
+    }
+
+    @Override
+    public String toString() {
+        return "Board{" +
+                "BoardState=" + Arrays.toString(BoardState) +
+                '}';
     }
 }
