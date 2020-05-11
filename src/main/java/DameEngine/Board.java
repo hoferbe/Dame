@@ -5,5 +5,5 @@ import DameEngine.Pieces.Piece;
 public class Board {
     private Piece[][] BoardState;
 
-    
+    public void placePiece()
 }
