@@ -25,7 +25,8 @@ public class GameEngine {
 
     //List to have all pieces
     private final Set<String> availablePiecesNames = new HashSet<>(Arrays.asList(
-            "DameEngine.Pieces.Pawn"
+            "DameEngine.Pieces.Pawn",
+            "DameEngine.Pieces.Queen"
     ));
 
     //Current State of the game
@@ -164,10 +165,7 @@ public class GameEngine {
         else{
             activeSquareEvent += checkMove(coordinates);
         }
-        synchronized (controllerEvents) {
-            controllerEvents.add(activeSquareEvent);
-            controllerEvents.notifyAll();
-        }
+        sendEventController(activeSquareEvent);
     }
 
     private String highlightSquare(Coordinates coordinates){
@@ -179,7 +177,7 @@ public class GameEngine {
         if(clickedPiece != null && clickedPiece.getPieceColor().equals(currentPlayer)){
             activeSquare = coordinates;
 
-            if(currentGameState == GameState.takable || currentGameState == GameState.hasToTake) legalMoves = myBoard.getPiece(coordinates).getLegalTakes(coordinates, myBoard);
+            if(currentGameState == GameState.takable || (currentGameState == GameState.hasToTake && coordinates.equals(coordinatesOfPieceNeedsToTake))) legalMoves = myBoard.getPiece(coordinates).getLegalTakes(coordinates, myBoard);
             else legalMoves = myBoard.getPiece(coordinates).getLegalMoves(coordinates, myBoard);
 
             ArrayList<String> highlights = new ArrayList<>();
@@ -212,7 +210,7 @@ public class GameEngine {
             }
             if(taking && myBoard.getPiece(coordinates).canTake(coordinates, myBoard)){
                 currentGameState = GameState.hasToTake;
-                Coordinates coordinatesOfPieceNeedsToTake = coordinates;
+                coordinatesOfPieceNeedsToTake = coordinates;
                 activeSquare = coordinates;
                 returnString += highlightSquare(coordinates);
                 resetActive = false;
@@ -224,6 +222,7 @@ public class GameEngine {
                     currentGameState = GameState.movable;
                 } else {
                     currentGameState = GameState.finished;
+                    sendEventController("gameengine_finished_" + currentPlayer);
                 }
             }
             if (promotion){
@@ -262,5 +261,12 @@ public class GameEngine {
             }
         }
         return false;
+    }
+
+    private void sendEventController(String event){
+        synchronized (controllerEvents) {
+            controllerEvents.add(event);
+            controllerEvents.notifyAll();
+        }
     }
 }

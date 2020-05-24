@@ -103,6 +103,10 @@ public class GameController {
                     GUI.setHighlightSquares(Arrays.copyOfRange(eventParts, 2, eventParts.length));
                     GUI.setBoardState(myEngine.getStringBoard());
                 }
+                else if(eventParts[1].equals("finished")){
+                    GUI.setChangeWindow("Menu");
+                    closeEngine();
+                }
                 else if(eventParts[1].equals("closechessboard")){
                     GUI.setChangeWindow("Menu");
                     closeEngine();
