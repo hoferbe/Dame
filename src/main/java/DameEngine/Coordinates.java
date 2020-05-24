@@ -41,6 +41,14 @@ public class Coordinates {
         return y;
     }
 
+    public String getXs(){
+        return Integer.toString(getX());
+    }
+
+    public String getYs(){
+        return Integer.toString(getY());
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

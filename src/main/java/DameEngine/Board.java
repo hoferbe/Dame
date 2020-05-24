@@ -20,6 +20,10 @@ public class Board {
         BoardState[start.getX()][start.getY()] = null;
     }
 
+    public void removePiece(Coordinates coordinates){
+        BoardState[coordinates.getX()][coordinates.getY()] = null;
+    }
+
     public Piece getPiece(Coordinates coordinates){
         return BoardState[coordinates.getX()][coordinates.getY()];
     }
@@ -29,5 +33,17 @@ public class Board {
         return "Board{" +
                 "BoardState=" + Arrays.toString(BoardState) +
                 '}';
+    }
+
+    public String[][] getStringBoard(){
+        String[][] stringBoard = new String[8][8];
+
+        for (int i = 0; i < 8; i++){
+            for (int j = 0; j < 8; j++){
+                if(BoardState[i][j] != null) stringBoard[i][j] = BoardState[i][j].getPieceIdentifierName();
+            }
+        }
+
+        return  stringBoard;
     }
 }

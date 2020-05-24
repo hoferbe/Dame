@@ -1,6 +1,6 @@
 package Controller;
 
-import Engine.GameEngine;
+import DameEngine.GameEngine;
 import GUI.EventHandler.ChessEventHandler;
 
 import java.lang.reflect.InvocationTargetException;
@@ -61,7 +61,7 @@ public class GameController {
                         public void run() {
                             try {
                                 myEngine = new GameEngine();
-                            } catch (InvocationTargetException | NoSuchMethodException | InstantiationException | IllegalAccessException | ClassNotFoundException e) {
+                            } catch (Exception e) {
                                 e.printStackTrace();
                             }
                         }
