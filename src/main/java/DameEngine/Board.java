@@ -11,19 +11,23 @@ public class Board {
         BoardState = new Piece[8][8];
     }
 
+    //Method to place a piece on the board
     public void placePiece(Coordinates coordinates, Piece piece){
         BoardState[coordinates.getX()][coordinates.getY()] = piece;
     }
 
+    //method to move a piece
     public void movePiece(Coordinates start, Coordinates end){
         BoardState[end.getX()][end.getY()] = BoardState[start.getX()][start.getY()];
         BoardState[start.getX()][start.getY()] = null;
     }
 
+    //method to remove a piece
     public void removePiece(Coordinates coordinates){
         BoardState[coordinates.getX()][coordinates.getY()] = null;
     }
 
+    //method to get a piece
     public Piece getPiece(Coordinates coordinates){
         return BoardState[coordinates.getX()][coordinates.getY()];
     }

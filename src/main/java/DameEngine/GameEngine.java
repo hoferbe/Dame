@@ -13,8 +13,8 @@ import java.util.*;
 public class GameEngine {
 
     //Currents state of the Engine
-    public boolean ready = false;
-    private boolean running = false;
+    public boolean ready;
+    private boolean running;
 
     //List of the events needing to be handled by the Engine
     private final Queue<String> engineEvents = new LinkedList<>();
@@ -43,7 +43,9 @@ public class GameEngine {
         hasToTake
     }
 
+    //Constructor for standard board setting
     public GameEngine() throws ClassNotFoundException, NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
+        //calls the constructor for a specific board setup with the standard boardstate
         this(new String[][]{
                 {"", "Pawn_black", "", "Pawn_black", "", "Pawn_black", "", "Pawn_black"},
                 {"Pawn_black", "", "Pawn_black", "", "Pawn_black", "", "Pawn_black", ""},
@@ -57,14 +59,18 @@ public class GameEngine {
         });
     }
 
+    //Constructor for specific board setting (mainly used for unit tests)
     public GameEngine(String[][] boardState) throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
         myBoard = new Board();
 
+        //saves a reference to the Queue for the events in the controller
         controllerEvents = eventTemp;
 
+        //registering pieces
         registerPieces();
         fillBoard(boardState);
 
+        //saving reference to this object in the controller
         GameController.myEngine = this;
 
         running = true;
@@ -73,15 +79,21 @@ public class GameEngine {
         run();
     }
 
+    //Registering pieces at the GUI == saving the url for the images of the pieces
     private void registerPieces() throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
+        //for each piece named in the Set, creating an instance to call the method to save the file paths at the GUI
         for (String name : availablePiecesNames) {
+            //Creating class by name
             Class<? extends Piece> pieceClass = (Class<? extends Piece>) Class.forName(name);
+            //creating instance by name
             Piece placeHolder = pieceClass.getDeclaredConstructor(new Class[]{String.class}).newInstance("white");
+            //saving the urls
             ChessboardPane.imagePaths.put(name + "_white", placeHolder.getImagePathWhite());
             ChessboardPane.imagePaths.put(name + "_black", placeHolder.getImagePathBlack());
         }
     }
 
+    //filling board with a specific board state
     private void fillBoard(String[][] boardState) {
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
@@ -100,8 +112,10 @@ public class GameEngine {
         }
     }
 
+    //run routin which is running while the game is running
     private void run() {
         try {
+            //game loop for the enginge
             while (!Thread.currentThread().isInterrupted() && running) {
                 synchronized (engineEvents) {
                     if (engineEvents.isEmpty()) {
@@ -119,14 +133,18 @@ public class GameEngine {
         }
     }
 
+    //method to properly stop the engine
     private void stopEngine() {
+        engineEvents.clear();
         running = false;
     }
 
+    //Methog returns the current Board as 2D array of String
     public String[][] getStringBoard() {
         return myBoard.getStringBoard();
     }
 
+    //Method that creates an event for the engine and wakes the thread up
     public void createEvent(String eventName) {
         synchronized (engineEvents) {
             engineEvents.add(eventName);
@@ -134,6 +152,7 @@ public class GameEngine {
         }
     }
 
+    //Method that handles the events
     private void handleEvent(String eventName) {
         eventName = eventName.toLowerCase();
         String[] eventParts = eventName.split("_"); //[0] origin, [1] event, [n>1] parameters
@@ -154,6 +173,7 @@ public class GameEngine {
 
     }
 
+    //Method that handles the square clicked event
     private void squareClicked(Coordinates coordinates) {
         String activeSquareEvent = "GameEngine_highlights_";
 
@@ -165,9 +185,11 @@ public class GameEngine {
         else{
             activeSquareEvent += checkMove(coordinates);
         }
+        //send the event to the controller
         sendEventController(activeSquareEvent);
     }
 
+    //method that gets called when there is no square active
     private String highlightSquare(Coordinates coordinates){
         String highlightedSquares = "";
         Set<Coordinates> legalMoves;
@@ -177,9 +199,12 @@ public class GameEngine {
         if(clickedPiece != null && clickedPiece.getPieceColor().equals(currentPlayer)){
             activeSquare = coordinates;
 
+            //If a piece can be taken, one has to take a piece. Additionally if a piece can take a second time, it has to do so. These cases are dealt with here
             if(currentGameState == GameState.takable || (currentGameState == GameState.hasToTake && coordinates.equals(coordinatesOfPieceNeedsToTake))) legalMoves = myBoard.getPiece(coordinates).getLegalTakes(coordinates, myBoard);
+            //If no piece can be taken, we deal with it here
             else legalMoves = myBoard.getPiece(coordinates).getLegalMoves(coordinates, myBoard);
 
+            //creating an ArrayList with constructions for the GUI on which squares to highlight
             ArrayList<String> highlights = new ArrayList<>();
             highlights.add("red");
             highlights.add(coordinates.getXs());
@@ -195,32 +220,51 @@ public class GameEngine {
         return highlightedSquares;
     }
 
+    //method called when there is a square active
     private String checkMove(Coordinates coordinates){
+        //used to make sure active doesn't get reset after piece has taken and can retake
         boolean resetActive = true;
+
         String returnString = "";
+        //if we are in the movable game state, check if the chosen move is legal
+        //if we are in takable or hasToTake game state, make sure the chosen move is legal and taking
         if((currentGameState == GameState.movable && myBoard.getPiece(activeSquare).isMoveLegal(activeSquare, coordinates, myBoard))
         || ((currentGameState == GameState.takable || currentGameState == GameState.hasToTake) && myBoard.getPiece(activeSquare).isTakeLegal(activeSquare, coordinates, myBoard))){
+            //Check what move type it is
             String moveType = myBoard.getPiece(activeSquare).moveType(activeSquare, coordinates);
+            //actually move the piece
             myBoard.movePiece(activeSquare, coordinates);
-            String[] test = moveType.split("_");
+
+            //check if it is taking, promoting (or both)
             boolean taking = moveType.split("_")[0].equals("taking");
             boolean promotion = moveType.split("_")[1].equals("promotion");
             if(taking){
+                //if it is taking, remove the taken piece
                 myBoard.removePiece(new Coordinates((coordinates.getX()+activeSquare.getX())/2, (coordinates.getY()+activeSquare.getY())/2));
             }
             if(taking && myBoard.getPiece(coordinates).canTake(coordinates, myBoard)){
+                //if it was a taking move and the piece can take another time, make sure the game state is changed accordingly.
                 currentGameState = GameState.hasToTake;
+                //save the coordinates of the piece that has to take next
                 coordinatesOfPieceNeedsToTake = coordinates;
+                //choose it as a active square
                 activeSquare = coordinates;
+                //create highlighting for the piece
                 returnString += highlightSquare(coordinates);
+                //make sure the active fields don't get reset
                 resetActive = false;
             }else {
+                //if the moved piece can't move again, change player
                 changePlayer();
+
                 if (takesLeft()) {
+                    //check if any takes are left, force a take on the next move
                     currentGameState = GameState.takable;
                 } else if (movesLeft()) {
+                    //check if any moves are left
                     currentGameState = GameState.movable;
                 } else {
+                    //if no moves are left, close the game
                     currentGameState = GameState.finished;
                     sendEventController("gameengine_finished_" + currentPlayer);
                 }
@@ -233,6 +277,7 @@ public class GameEngine {
         return returnString;
     }
 
+    //method to change the current player from black to white and vice versa
     private void changePlayer(){
         if(currentPlayer.equals("white")){
             currentPlayer = "black";
@@ -241,32 +286,45 @@ public class GameEngine {
         }
     }
 
+    //checks whether there are any legal moves left for the current player
     private boolean movesLeft(){
-        for (int i = 0; i < 8; i++){
-            for (int j = 0; j < 8; j++){
-                if (myBoard.getPiece(new Coordinates(i, j)) != null
-                        && myBoard.getPiece(new Coordinates(i, j)).canMove(new Coordinates(i, j), myBoard)) return true;
-            }
-        }
-        return false;
-    }
-
-    private boolean takesLeft(){
-        for (int i = 0; i < 8; i++){
-            for (int j = 0; j < 8; j++){
-                Piece testPiece = myBoard.getPiece(new Coordinates(i, j));
+        for (int x = 0; x < 8; x++){
+            for (int y = 0; y < 8; y++){
+                Piece testPiece = myBoard.getPiece(new Coordinates(x, y));
                 if (testPiece != null
                         && testPiece.getPieceColor().equals(currentPlayer)
-                        && testPiece.canTake(new Coordinates(i, j), myBoard)) return true;
+                        && testPiece.canMove(new Coordinates(x, y), myBoard)) return true;
             }
         }
         return false;
     }
 
+    //checks if there are any moves left that are taking
+    private boolean takesLeft(){
+        for (int x = 0; x < 8; x++){
+            for (int y = 0; y < 8; y++){
+                Piece testPiece = myBoard.getPiece(new Coordinates(x, y));
+                if (testPiece != null
+                        && testPiece.getPieceColor().equals(currentPlayer)
+                        && testPiece.canTake(new Coordinates(x, y), myBoard)) return true;
+            }
+        }
+        return false;
+    }
+
+    //method that sends an event to the controller
     private void sendEventController(String event){
         synchronized (controllerEvents) {
             controllerEvents.add(event);
             controllerEvents.notifyAll();
         }
+    }
+
+    public Queue<String> getControllerEvents(){
+        return controllerEvents;
+    }
+
+    public Queue<String> getEngineEvents(){
+        return engineEvents;
     }
 }

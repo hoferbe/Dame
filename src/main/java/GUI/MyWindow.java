@@ -35,7 +35,7 @@ public class MyWindow extends Application {
         myStage = primaryStage;
 
         activeScene = "Menu";
-        myStage.setTitle("Chess");
+        myStage.setTitle("Chekers");
         myStage.setScene(myScenes.get("Menu"));
 
         myStage.setOnCloseRequest(new ChessWindowEventHandler(){

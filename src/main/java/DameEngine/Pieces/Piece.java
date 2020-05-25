@@ -21,10 +21,6 @@ public abstract class Piece {
         this.imagePathBlack = imagePathBlack;
     }
 
-    public String getPieceColor() {
-        return pieceColor;
-    }
-
     public Set<Coordinates> getLegalMoves(Coordinates coordinates, Board board){
         Set<Coordinates> legalMoves = new HashSet<>();
         for(int x = 0; x < 8; x++){
@@ -35,7 +31,6 @@ public abstract class Piece {
         }
         return legalMoves;
     }
-
     public Set<Coordinates> getLegalTakes(Coordinates coordinates, Board board){
         Set<Coordinates> legalMoves = new HashSet<>();
         for(int x = 0; x < 8; x++){
@@ -59,7 +54,6 @@ public abstract class Piece {
         }
         return false;
     }
-
     public boolean canTake(Coordinates coordinates, Board board){
         for(int x = 0; x < 8; x++){
             for(int y = 0; y < 8; y++){
@@ -76,10 +70,13 @@ public abstract class Piece {
         return pieceName + "_" + pieceColor;
     }
 
+    public String getPieceColor() {
+        return pieceColor;
+    }
+
     public String getImagePathBlack() {
         return imagePathBlack;
     }
-
     public String getImagePathWhite() {
         return imagePathWhite;
     }

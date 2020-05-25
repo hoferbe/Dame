@@ -3,12 +3,10 @@ package Controller;
 import DameEngine.GameEngine;
 import GUI.EventHandler.ChessEventHandler;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 public class GameController {
 
-    private final Object eventInputLock = new Object();
     private final Queue<String> eventInput = new LinkedList<>();
     private static volatile boolean running;
 
@@ -19,13 +17,16 @@ public class GameController {
     private GUIController GUI;
     private Thread GUIThread;
 
-    GameController(String[] args) {
+    //constructor
+    public GameController(String[] args) {
+        //save the event Input for the controller in the engine and for the eventhandler of the GUI
         ChessEventHandler.eventTemp = eventInput;
         GameEngine.eventTemp = eventInput;
         running = true;
     }
 
     void run() {
+        //Create and set up the GUI controller in a new thread
         GUI = new GUIController();
         GUIThread = new Thread(GUI);
         GUIThread.setName("GUI Controller Thread");
@@ -34,7 +35,7 @@ public class GameController {
             try {
                 synchronized (eventInput) {
                     if (eventInput.isEmpty()) {
-                        //is there's no Event, wait
+                        //if there's no Event, wait
                         eventInput.wait();
                     }
                     while (!eventInput.isEmpty()) {
@@ -56,11 +57,21 @@ public class GameController {
         switch (eventParts[0]) {
             case "chessmenuwindow":
                 if (eventParts[1].compareTo("startgame") == 0) {
+                    //change to board window and start the game. Engine in a new thread
                     engineThread = new Thread("EngineThread") {
                         @Override
                         public void run() {
                             try {
-                                myEngine = new GameEngine();
+                                new GameEngine(new String[][]{
+                                        {"", "", "", "", "", "", "", ""},
+                                        {"", "", "", "", "", "", "", ""},
+                                        {"", "", "", "", "", "", "", ""},
+                                        {"", "", "", "Pawn_black", "", "", "", ""},
+                                        {"", "", "", "", "Pawn_white", "", "", ""},
+                                        {"", "", "", "", "", "", "", ""},
+                                        {"", "", "", "", "", "", "", ""},
+                                        {"", "", "", "", "", "", "", ""},
+                                });
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
@@ -75,6 +86,7 @@ public class GameController {
                 break;
 
             case "chessboardwindow":
+                //change back to the menu and shut off the engine
                 if (eventParts[1].compareTo("stopgame") == 0) {
                     GUI.setChangeWindow("Menu");
                     closeEngine();
@@ -82,9 +94,11 @@ public class GameController {
                 break;
 
             case "chesswindow":
+                //properly turn off the programm
                 if (eventParts[1].compareTo("closeprogram") == 0) {
                     closeProgram();
                 }
+                //change back to the menu and shut off the engine
                 else if(eventParts[1].equals("openmenu")){
                     GUI.setChangeWindow("Menu");
                     closeEngine();
@@ -92,6 +106,7 @@ public class GameController {
                 break;
 
             case "chessboard":
+                //hand over the event ot the game engine
                 if (eventParts[1].compareTo("clicked") == 0) {
                     //String[] highlights = myEngine.squareClicked(new Pair<>(Integer.parseInt(eventParts[2]), Integer.parseInt(eventParts[3])));
                     myEngine.createEvent(eventName);
@@ -99,14 +114,17 @@ public class GameController {
                 break;
 
             case "gameengine":
+                //send the highlights to the GUI and reset the boardstate of the GUI
                 if(eventParts[1].equals("highlights")) {
                     GUI.setHighlightSquares(Arrays.copyOfRange(eventParts, 2, eventParts.length));
                     GUI.setBoardState(myEngine.getStringBoard());
                 }
+                //if game has finished, change back to Menu
                 else if(eventParts[1].equals("finished")){
                     GUI.setChangeWindow("Menu");
                     closeEngine();
                 }
+                //if the back button has been clicked, change back to the menu
                 else if(eventParts[1].equals("closechessboard")){
                     GUI.setChangeWindow("Menu");
                     closeEngine();

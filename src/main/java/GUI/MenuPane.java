@@ -2,14 +2,19 @@ package GUI;
 
 import GUI.EventHandler.ChessActionEventHandler;
 import javafx.event.ActionEvent;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 
 public class MenuPane extends BorderPane {
 
     public MenuPane(){
-        this.setTop(new Label("Chess"));
+        FlowPane topPane = new FlowPane();
+        Label topLabel = new Label("Checkers");
+        topPane.getChildren().addAll(topLabel);
+        this.setTop(topPane);
 
         //creating Pane to fill the center of the scene
         FlowPane centerPane = new FlowPane();
@@ -25,32 +30,12 @@ public class MenuPane extends BorderPane {
         gamePVE.setToggleGroup(playerOrBot);
         chooseGameModePane.getChildren().addAll(gameModeLabel, gamePVP, gamePVE);
 
-        //creating and filling the Pane for the difficulty of the Bot
-        FlowPane chooseDifficultyPane = new FlowPane();
-        Label difficultySettingLabel = new Label("Bot Strength: ");
-        Slider botDifficulty = new Slider();
-        botDifficulty.setMin(0);
-        botDifficulty.setMax(100);
-        botDifficulty.setValue(40);
-        botDifficulty.setShowTickLabels(true);
-        botDifficulty.setShowTickMarks(false);
-        botDifficulty.setMajorTickUnit(50);
-        botDifficulty.setMinorTickCount(5);
-        botDifficulty.setBlockIncrement(10);
-        chooseDifficultyPane.getChildren().addAll(difficultySettingLabel, botDifficulty);
+        //fill the center Pane
+        centerPane.getChildren().addAll(chooseGameModePane);
+        this.setCenter(centerPane);
 
-        //creating and filling the Pane for the player Color
-        FlowPane chooseColorPane = new FlowPane();
-        Label ColorLabel = new Label("Color: ");
-        final ToggleGroup playerColor = new ToggleGroup();
-        RadioButton colorWhite = new RadioButton("White");
-        colorWhite.setToggleGroup(playerColor);
-        colorWhite.setSelected(true);
-        RadioButton colorBlack = new RadioButton("Black");
-        colorBlack.setToggleGroup(playerColor);
-        RadioButton colorRandom = new RadioButton("Random");
-        colorRandom.setToggleGroup(playerColor);
-        chooseColorPane.getChildren().addAll(ColorLabel, colorWhite, colorBlack, colorRandom);
+        //creating Pane to fill the bottom of the scene
+        FlowPane bottomPane = new FlowPane();
 
         //creating the Pane for the play button
         FlowPane playButtonPane = new FlowPane();
@@ -61,14 +46,18 @@ public class MenuPane extends BorderPane {
                 send("Chessmenuwindow_StartGame");
             }
         });
-
         playButtonPane.getChildren().addAll(playButton);
 
-        //fill the center Pane
-        centerPane.getChildren().addAll(chooseGameModePane, chooseDifficultyPane, chooseColorPane, playButtonPane);
-        this.setCenter(centerPane);
+        bottomPane.getChildren().addAll(playButton);
+        this.setBottom(bottomPane);
 
-        this.setBottom(new Label("Testing!"));
+
+        this.setBackground(new Background(new BackgroundFill(Color.rgb(179, 77, 77), CornerRadii.EMPTY, Insets.EMPTY)));
+
+        topLabel.setPrefHeight(30);
+        topLabel.setStyle("-fx-font-size: 20pt; -fx-text-fill: yellow");
+
+        playButton.setBackground(new Background(new BackgroundFill(Color.rgb(255, 234, 106), CornerRadii.EMPTY, Insets.EMPTY)));
 
     }
 }
