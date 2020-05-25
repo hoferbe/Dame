@@ -63,24 +63,23 @@ public class PawnTest {
             Thread.sleep(100);
         }
         myEngine = GameController.myEngine;
-        final Queue<String> eventReader = myEngine.getControllerEvents();
 
         myEngine.createEvent("chessBoard_clicked_7_7");
-        synchronized (eventReader){
-            eventReader.wait(1000);
+        synchronized (eventInput){
+            eventInput.wait(1000);
         }
         myEngine.createEvent("chessBoard_clicked_6_6");
-        synchronized (eventReader){
-            eventReader.wait(1000);
+        synchronized (eventInput){
+            eventInput.wait(1000);
         }
 
-        assertEquals(2, eventReader.size());
+        assertEquals(2, eventInput.size());
 
         myEngine.createEvent("chessBoard_clicked_0_0");
         myEngine.createEvent("chessBoard_clicked_1_1");
         Thread.sleep(100);
 
-        assertEquals(4, eventReader.size());
+        assertEquals(4, eventInput.size());
 
 
         if(myEngine != null) {
@@ -117,13 +116,12 @@ public class PawnTest {
             Thread.sleep(100);
         }
         myEngine = GameController.myEngine;
-        final Queue<String> eventReader = myEngine.getControllerEvents();
 
         myEngine.createEvent("chessBoard_clicked_7_7");
         myEngine.createEvent("chessBoard_clicked_6_6");
         Thread.sleep(100);
 
-        assertEquals(2, eventReader.size());
+        assertEquals(2, eventInput.size());
         eventInput.remove();
         assertEquals("GameEngine_highlights_", eventInput.remove());
     }
