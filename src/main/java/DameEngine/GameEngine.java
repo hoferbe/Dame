@@ -266,7 +266,10 @@ public class GameEngine {
                 } else {
                     //if no moves are left, close the game
                     currentGameState = GameState.finished;
-                    sendEventController("gameengine_finished_" + currentPlayer);
+                    String winner = "";
+                    if(currentPlayer.equals("white")) winner = "Black";
+                    else winner = "White";
+                    sendEventController("gameengine_finished_" + winner);
                 }
             }
             if (promotion){

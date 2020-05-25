@@ -3,14 +3,12 @@ package GUI;
 import GUI.EventHandler.ChessActionEventHandler;
 import GUI.EventHandler.ChessBoardClickedEventHandler;
 import javafx.event.ActionEvent;
+import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.StrokeType;
@@ -18,7 +16,7 @@ import javafx.scene.shape.StrokeType;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ChessboardPane extends BorderPane {
+public class ChessboardPane extends AnchorPane {
 
     double chessboardWidth;
     double chessboardHeight;
@@ -33,7 +31,7 @@ public class ChessboardPane extends BorderPane {
 
 
     ChessboardPane() {
-        AnchorPane bordPane = new AnchorPane();
+        AnchorPane boardPane = new AnchorPane();
         Image chessboardImage = new Image("file:src/main/resources/chessboard.png", 800, 800, false, false);
         ImageView chessboardView = new ImageView(chessboardImage);
         chessboardWidth = chessboardImage.getWidth();
@@ -63,7 +61,7 @@ public class ChessboardPane extends BorderPane {
         AnchorPane.setLeftAnchor(piecesPane, 0.0);
         AnchorPane.setTopAnchor(piecesPane, 0.0);
 
-        bordPane.getChildren().addAll(chessboardView, squarePane, piecesPane);
+        boardPane.getChildren().addAll(chessboardView, squarePane, piecesPane);
 
         VBox buttonPane = new VBox();
 
@@ -76,8 +74,21 @@ public class ChessboardPane extends BorderPane {
         });
         buttonPane.getChildren().addAll(backButton);
 
-        this.setCenter(bordPane);
-        this.setRight(buttonPane);
+
+        AnchorPane.setTopAnchor(boardPane, 20.0);
+        AnchorPane.setLeftAnchor(boardPane, 20.0);
+
+
+        AnchorPane.setTopAnchor(buttonPane, 840.0);
+        AnchorPane.setLeftAnchor(buttonPane, 390.0);
+
+        this.getChildren().addAll(boardPane, buttonPane);
+
+
+
+        this.setBackground(new Background(new BackgroundFill(Color.rgb(179, 77, 77), CornerRadii.EMPTY, Insets.EMPTY)));
+
+        backButton.setBackground(new Background(new BackgroundFill(Color.rgb(255, 234, 106), CornerRadii.EMPTY, Insets.EMPTY)));
 
     }
 

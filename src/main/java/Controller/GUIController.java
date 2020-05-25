@@ -7,10 +7,10 @@ import javafx.scene.Scene;
 
 public class GUIController implements Runnable {
 
-    static private boolean openNewWindow = false;
-    static private String newWindowName = "Menu";
+    private static boolean openNewWindow = false;
+    private static String newWindowName = "Menu";
     private final Object changeWindowLock = new Object();
-    Thread windowThread;
+    private Thread windowThread;
     private static volatile boolean running;
     public static MyWindow myWindow;
 
@@ -80,5 +80,9 @@ public class GUIController implements Runnable {
 
     public void setBoardState(String[][] boardState){
         Platform.runLater(()->myWindow.setBoardState(boardState));
+    }
+
+    public void setWinner(String color){
+        Platform.runLater(()->myWindow.winnerFound(color));
     }
 }

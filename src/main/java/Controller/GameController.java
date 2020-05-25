@@ -51,8 +51,8 @@ public class GameController {
     }
 
     void handleEvent(String eventName){
-        eventName = eventName.toLowerCase();
-        String[] eventParts = eventName.split("_"); //[0] origin, [1] event, [n>1] parameters
+        String eventNameL = eventName.toLowerCase();
+        String[] eventParts = eventNameL.split("_"); //[0] origin, [1] event, [n>1] parameters
         System.out.println("Event occured: " + eventName);
         switch (eventParts[0]) {
             case "chessmenuwindow":
@@ -65,12 +65,12 @@ public class GameController {
                                 new GameEngine(new String[][]{
                                         {"", "", "", "", "", "", "", ""},
                                         {"", "", "", "", "", "", "", ""},
+                                        {"", "", "Pawn_black", "", "", "", "", ""},
                                         {"", "", "", "", "", "", "", ""},
-                                        {"", "", "", "Pawn_black", "", "", "", ""},
                                         {"", "", "", "", "Pawn_white", "", "", ""},
                                         {"", "", "", "", "", "", "", ""},
                                         {"", "", "", "", "", "", "", ""},
-                                        {"", "", "", "", "", "", "", ""},
+                                        {"", "", "", "", "", "", "", ""}
                                 });
                             } catch (Exception e) {
                                 e.printStackTrace();
@@ -121,8 +121,7 @@ public class GameController {
                 }
                 //if game has finished, change back to Menu
                 else if(eventParts[1].equals("finished")){
-                    GUI.setChangeWindow("Menu");
-                    closeEngine();
+                    GUI.setWinner(eventName.split("_")[2]);
                 }
                 //if the back button has been clicked, change back to the menu
                 else if(eventParts[1].equals("closechessboard")){

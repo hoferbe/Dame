@@ -5,7 +5,12 @@ import Controller.GUIController;
 import GUI.EventHandler.ChessWindowEventHandler;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
@@ -24,7 +29,7 @@ public class MyWindow extends Application {
         myScenes = new HashMap<>();
         myScenes.put("Menu", new Scene(new MenuPane(), 300, 275));
         chessPane = new ChessboardPane();
-        myScenes.put("Engine.Chessboard", new Scene(new ChessboardPane()));
+        myScenes.put("Engine.Chessboard", new Scene(new ChessboardPane(), 840, 880));
     }
 
     @Override
@@ -58,6 +63,21 @@ public class MyWindow extends Application {
             myStage.setScene(myScenes.get(sceneName));
             myStage.show();
         }
+    }
+
+    public void winnerFound(String color){
+        final Stage dialog = new Stage();
+        dialog.initModality(Modality.APPLICATION_MODAL);
+        dialog.initOwner(myStage);
+        StackPane dialogVbox = new StackPane();
+        Text text = new Text(color + " has won!");
+        dialogVbox.getChildren().add(text);
+        Scene dialogScene = new Scene(dialogVbox, 300, 200);
+        dialog.setScene(dialogScene);
+        dialog.show();
+
+        dialogVbox.setBackground(new Background(new BackgroundFill(Color.rgb(179, 77, 77), CornerRadii.EMPTY, Insets.EMPTY)));
+        text.setFill(Color.YELLOW);
     }
 
     public void setHighlightSquares(String[] highlightSquares){

@@ -8,13 +8,14 @@ import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 
-public class MenuPane extends BorderPane {
+public class MenuPane extends AnchorPane {
 
     public MenuPane(){
         FlowPane topPane = new FlowPane();
         Label topLabel = new Label("Checkers");
         topPane.getChildren().addAll(topLabel);
-        this.setTop(topPane);
+        AnchorPane.setTopAnchor(topPane, 0.0);
+        AnchorPane.setLeftAnchor(topPane, 95.0);
 
         //creating Pane to fill the center of the scene
         FlowPane centerPane = new FlowPane();
@@ -32,7 +33,8 @@ public class MenuPane extends BorderPane {
 
         //fill the center Pane
         centerPane.getChildren().addAll(chooseGameModePane);
-        this.setCenter(centerPane);
+        AnchorPane.setTopAnchor(centerPane, 100.0);
+        AnchorPane.setLeftAnchor(centerPane, 50.0);
 
         //creating Pane to fill the bottom of the scene
         FlowPane bottomPane = new FlowPane();
@@ -49,7 +51,10 @@ public class MenuPane extends BorderPane {
         playButtonPane.getChildren().addAll(playButton);
 
         bottomPane.getChildren().addAll(playButton);
-        this.setBottom(bottomPane);
+        AnchorPane.setTopAnchor(bottomPane, 200.0);
+        AnchorPane.setLeftAnchor(bottomPane, 130.0);
+
+        this.getChildren().addAll(topPane, centerPane, bottomPane);
 
 
         this.setBackground(new Background(new BackgroundFill(Color.rgb(179, 77, 77), CornerRadii.EMPTY, Insets.EMPTY)));
